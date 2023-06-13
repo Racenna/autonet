@@ -4,11 +4,7 @@ import { routes } from "./const/routes";
 const router = createBrowserRouter(routes);
 
 function App() {
-  return (
-    <div>
-      <RouterProvider router={router} />
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

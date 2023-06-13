@@ -5,13 +5,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useTranslation } from "react-i18next";
+import { LinkButton } from "../../shared/components/LinkButton";
+import { Path } from "../../const/enums";
 
 export const SignIn = () => {
   const { t } = useTranslation();
@@ -77,14 +78,12 @@ export const SignIn = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                {t("auth.forgotPassword")}
-              </Link>
+              <LinkButton path="#">{t("auth.forgotPassword")}</LinkButton>
             </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
+            <Grid item xs>
+              <LinkButton path={Path.SIGN_UP}>
                 {t("auth.haveNotAccount")}
-              </Link>
+              </LinkButton>
             </Grid>
           </Grid>
         </Box>
