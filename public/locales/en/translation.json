@@ -1,0 +1,14 @@
+{
+  "backHome": "Back home",
+  "auth.signUp": "Sign Up",
+  "auth.signIn": "Sign In",
+  "auth.firstName": "First Name",
+  "auth.lastName": "Last Name",
+  "auth.email": "Email Address",
+  "auth.password": "Password",
+  "auth.alreadyHaveAccount": "Already have an account? Sign in",
+  "auth.haveNotAccount": "Don't have an account? Sign Up",
+  "auth.rememberMe": "Remember me",
+  "auth.forgotPassword": "Forgot password?",
+  "error.pageNotExist": "The page you are looking for does not exist."
+}
