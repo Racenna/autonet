@@ -1,0 +1,14 @@
+{
+  "backHome": "Повернутися на головну",
+  "auth.signUp": "Зареєструватися",
+  "auth.signIn": "Увійти",
+  "auth.firstName": "Ім'я",
+  "auth.lastName": "Прізвище",
+  "auth.email": "Електронна адреса",
+  "auth.password": "Пароль",
+  "auth.alreadyHaveAccount": "Вже є обліковий запис? Увійти",
+  "auth.haveNotAccount": "Немає облікового запису? Зареєструватися",
+  "auth.rememberMe": "Запам'ятати мене",
+  "auth.forgotPassword": "Забули пароль?",
+  "error.pageNotExist": "Сторінка, яку ви шукаєте, не існує."
+}

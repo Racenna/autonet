@@ -11,8 +11,11 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { useTranslation } from "react-i18next";
 
 export const SignIn = () => {
+  const { t } = useTranslation();
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -37,7 +40,7 @@ export const SignIn = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          {t("auth.signIn")}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -45,7 +48,7 @@ export const SignIn = () => {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label={t("auth.email")}
             name="email"
             autoComplete="email"
             autoFocus
@@ -55,14 +58,14 @@ export const SignIn = () => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={t("auth.password")}
             type="password"
             id="password"
             autoComplete="current-password"
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            label={t("auth.rememberMe")}
           />
           <Button
             type="submit"
@@ -70,17 +73,17 @@ export const SignIn = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            {t("auth.signIn")}
           </Button>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Forgot password?
+                {t("auth.forgotPassword")}
               </Link>
             </Grid>
             <Grid item>
               <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+                {t("auth.haveNotAccount")}
               </Link>
             </Grid>
           </Grid>
