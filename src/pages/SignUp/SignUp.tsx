@@ -3,13 +3,14 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useTranslation } from "react-i18next";
+import { LinkButton } from "../../shared/components/LinkButton";
+import { Path } from "../../const/enums";
 
 export const SignUp = () => {
   const { t } = useTranslation();
@@ -95,9 +96,9 @@ export const SignUp = () => {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <LinkButton path={Path.SIGN_IN}>
                 {t("auth.alreadyHaveAccount")}
-              </Link>
+              </LinkButton>
             </Grid>
           </Grid>
         </Box>
