@@ -2,6 +2,11 @@
   "us": "Англійська",
   "ua": "Українська",
   "backHome": "Повернутися на головну",
+  "male": "Чоловік",
+  "female": "Жінка",
+  "other": "Інший",
+  "gender": "Стать",
+  "auth.login": "Логін",
   "auth.signUp": "Зареєструватися",
   "auth.signIn": "Увійти",
   "auth.firstName": "Ім'я",
@@ -11,6 +16,8 @@
   "auth.alreadyHaveAccount": "Вже є обліковий запис? Увійти",
   "auth.haveNotAccount": "Немає облікового запису? Зареєструватися",
   "auth.rememberMe": "Запам'ятати мене",
-  "auth.forgotPassword": "Забули пароль?",
+  "auth.birthday": "День народження",
+  "toast.successRegister": "Реєстрація завершена",
+  "toast.successLogin": "Успішно ввійшли",
   "error.pageNotExist": "Сторінка, яку ви шукаєте, не існує."
 }

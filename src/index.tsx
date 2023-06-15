@@ -1,9 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { store } from "./redux";
+import { Provider } from "react-redux";
 
+import "react-toastify/dist/ReactToastify.css";
 import "./i18n";
 
 const root = ReactDOM.createRoot(
@@ -14,7 +17,9 @@ const defaultTheme = createTheme();
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={defaultTheme}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ThemeProvider>
   </React.StrictMode>
 );
