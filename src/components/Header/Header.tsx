@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { SwitchLanguage } from "../SwitchLanguage";
 
 export const Header = () => {
@@ -14,7 +14,9 @@ export const Header = () => {
           Project Name
         </Typography>
         <nav></nav>
-        <SwitchLanguage />
+        <Box display="none">
+          <SwitchLanguage />
+        </Box>
       </Toolbar>
     </AppBar>
   );
