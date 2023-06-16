@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import { IGetUserResponse } from "../types/user";
-import { setUser } from "../../user/userSlice";
+import {
+  IGetNewTokenRequest,
+  IGetNewTokenResponse,
+  IGetUserResponse,
+  IUserListItem,
+} from "../types/user";
+import { setListOfUsers, setUser } from "../../user/userSlice";
 import { Method } from "../types/request";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL as string;
@@ -12,7 +17,7 @@ export const userApi = createApi({
   }),
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    getMe: builder.mutation<IGetUserResponse, null>({
+    getMe: builder.mutation<IGetUserResponse, void>({
       query() {
         return {
           url: "/",
@@ -22,7 +27,7 @@ export const userApi = createApi({
           },
         };
       },
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           const {
             data: { profile },
@@ -41,11 +46,54 @@ export const userApi = createApi({
             })
           );
         } catch (error) {
-          console.error("userApi-getMe-onQQueryStarted_error:", error);
+          console.error("userApi-getMe-onQueryStarted_error:", error);
+        }
+      },
+    }),
+    getNewToken: builder.mutation<IGetNewTokenResponse, IGetNewTokenRequest>({
+      query(data) {
+        return {
+          url: "/new-token",
+          method: Method.POST,
+          params: {
+            refreshToken: data.refreshToken,
+          },
+        };
+      },
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          const {
+            data: { accessKey, refresh_token },
+          } = await queryFulfilled;
+          localStorage.setItem("accessKey", accessKey);
+          localStorage.setItem("refresh_token", refresh_token);
+          await dispatch(userApi.endpoints.getMe.initiate());
+        } catch (error) {
+          console.error("userApi-getNewToken-onQueryStarted_error:", error);
+        }
+      },
+    }),
+    getAllUsers: builder.query<IUserListItem[], void>({
+      query() {
+        return {
+          url: "/all",
+          method: Method.GET,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessKey")}`,
+          },
+        };
+      },
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setListOfUsers(data));
+        } catch (error) {
+          console.error("userApi-getAllUsers-onQueryStarted_error:", error);
         }
       },
     }),
   }),
 });
 
-export const { useGetMeMutation } = userApi;
+export const { useGetMeMutation, useGetNewTokenMutation, useGetAllUsersQuery } =
+  userApi;

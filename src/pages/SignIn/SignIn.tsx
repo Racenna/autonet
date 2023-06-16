@@ -1,27 +1,32 @@
 import { useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
+import {
+  Avatar,
+  Button,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { LinkButton } from "../../shared/components/LinkButton";
 import { Path } from "../../const/enums";
-import { useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "../../redux/services/auth";
-import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { LoginInput, loginSchema } from "../../validators/signIn";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
+import { isAuthorized } from "../../utils/isAuthorized";
+import { useAppSelector } from "../../redux/store";
 
 export const SignIn = () => {
   const [loginUser, { isLoading, isError, error, isSuccess }] =
     useLoginUserMutation();
+  const isAuth = useAppSelector((state) => state.user.isAuthorized);
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -39,11 +44,16 @@ export const SignIn = () => {
   } = methods;
 
   useEffect(() => {
+    if (isAuth && isAuthorized()) {
+      navigate("/");
+    }
+  }, [isAuth]);
+
+  useEffect(() => {
     if (isSuccess) {
       toast.success(t("toast.successLogin"), {
         position: "top-center",
       });
-      navigate("/");
     }
     if (isError) {
       console.error(error);
@@ -59,11 +69,12 @@ export const SignIn = () => {
   }, [isSubmitSuccessful]);
 
   const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
-    const { login, password } = values;
+    const { login, password, rememberMe } = values;
 
     loginUser({
       Login: login,
       Password: password,
+      IsNeedToRemember: rememberMe,
     });
   };
 
@@ -124,6 +135,7 @@ export const SignIn = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
             >
               {t("auth.signIn")}
             </Button>

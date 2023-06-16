@@ -33,14 +33,14 @@ export const authApi = createApi({
           body: data,
         };
       },
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           const {
             data: { accessKey, refresh_token },
           } = await queryFulfilled;
           localStorage.setItem("accessKey", accessKey);
           localStorage.setItem("refresh_token", refresh_token);
-          await dispatch(userApi.endpoints.getMe.initiate(null));
+          await dispatch(userApi.endpoints.getMe.initiate());
         } catch (error) {
           console.error("authApi-loginUser-onQueryStarted_error:", error);
         }
