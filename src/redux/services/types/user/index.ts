@@ -19,13 +19,29 @@ export interface IProfile {
 }
 
 export interface IGetUserResponse {
-  profile: {
-    name: string;
-    surname: string;
-    email: string;
-    birthday: string;
-    avatarImage: string;
-    description: string;
-    sex: Gender;
-  };
+  profile: IProfileLowerCase;
+}
+
+export interface IGetNewTokenResponse {
+  refresh_token: string;
+  accessKey: string;
+}
+
+export interface IGetNewTokenRequest {
+  refreshToken: string;
+}
+
+export interface IUserListItem {
+  id: number;
+  profile: IProfileLowerCase;
+}
+
+export interface IProfileLowerCase {
+  name: string;
+  surname: string;
+  email: string;
+  birthday: string;
+  avatarImage: string;
+  description: string;
+  sex: Gender;
 }

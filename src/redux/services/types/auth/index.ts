@@ -9,6 +9,7 @@ export interface IRegisterUserBodyRequest {
 export interface ILoginUserBodyRequest {
   Login: string;
   Password: string;
+  IsNeedToRemember: boolean;
 }
 
 export interface IBaseResponse {

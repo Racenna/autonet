@@ -31,10 +31,13 @@ import { Path } from "../../const/enums";
 import { Gender } from "../../redux/services/types/user";
 import { useRegisterUserMutation } from "../../redux/services/auth";
 import { registerSchema, RegisterInput } from "../../validators/signUp";
+import { useAppSelector } from "../../redux/store";
+import { isAuthorized } from "../../utils/isAuthorized";
 
 export const SignUp = () => {
   const [registerUser, { isLoading, isError, error, isSuccess }] =
     useRegisterUserMutation();
+  const isAuth = useAppSelector((state) => state.user.isAuthorized);
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -52,11 +55,17 @@ export const SignUp = () => {
   } = methods;
 
   useEffect(() => {
+    if (isAuth && isAuthorized()) {
+      navigate("/");
+    }
+  }, [isAuth]);
+
+  useEffect(() => {
     if (isSuccess) {
       toast.success(t("toast.successRegister"), {
         position: "top-center",
       });
-      navigate("/signIn");
+      navigate(Path.SIGN_IN);
     }
     if (isError) {
       console.error(error);
