@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -23,6 +23,7 @@ function App() {
     if (isAuthorized()) {
       getMe();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ function App() {
         refreshToken: localStorage.getItem("refresh_token") ?? "",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
   if (isLoading) return <FullScreenLoader />;
