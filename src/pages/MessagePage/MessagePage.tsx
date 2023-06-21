@@ -185,6 +185,7 @@ const MessagePage: React.FC = () => {
               setNewMessage(e.target.value);
               handleInputMessage(Number(chatId ?? activeChat?.chat?.id));
             }}
+            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
             size="small"
           />
           <Button

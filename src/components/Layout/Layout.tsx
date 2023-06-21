@@ -86,6 +86,12 @@ export const Layout = () => {
     if (isAuth) {
       getFriendsList();
       getAllChats();
+      const interval = setInterval(() => {
+        getFriendsList();
+        getAllChats();
+      }, 5000);
+
+      return () => clearInterval(interval);
     }
   }, [isAuth]);
 

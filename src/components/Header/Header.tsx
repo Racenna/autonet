@@ -66,6 +66,14 @@ export const Header = () => {
   });
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      refetchFriendRequests();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     if (isAcceptSuccess) {
       toast.success("Friend request accepted");
       refetchFriendRequests();

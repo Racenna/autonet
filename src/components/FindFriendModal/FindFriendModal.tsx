@@ -64,6 +64,10 @@ export const FindFriendModal: FC<ModalProps> = ({ open, handleClose }) => {
 
   useEffect(() => {
     refetchSendedRequest();
+    const interval = setTimeout(() => {
+      refetchSendedRequest();
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
