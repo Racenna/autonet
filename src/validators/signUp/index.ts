@@ -33,8 +33,8 @@ export const registerSchema = z
     lastName: z
       .string()
       .nonempty("Last name is required")
-      .min(2, "Last name must be more than 6 characters")
-      .max(50, "Last name must be less than 30 characters")
+      .min(2, "Last name must be more than 2 characters")
+      .max(50, "Last name must be less than 50 characters")
       .regex(
         /^[a-zA-Z]{2,50}$/,
         "Not a valid last name format. Only Latin letters are allowed."

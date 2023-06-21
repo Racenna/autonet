@@ -10,7 +10,11 @@ export const HomePage = () => {
   const isAuth = useAppSelector((state) => state.user.isAuthorized);
 
   useEffect(() => {
+    const savedRoute = localStorage.getItem("currentRoute");
     if (!isAuth || !isAuthorized()) navigate(Path.SIGN_IN);
+    if ((isAuth || isAuthorized()) && savedRoute) {
+      navigate(savedRoute);
+    }
   }, [isAuth]);
 
   return (

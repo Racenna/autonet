@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { Method } from "../types/request";
-import { setListOfChats } from "../../user/userSlice";
-import { IChatResponse } from "../types/chat";
+import { setActiveChat, setListOfChats } from "../../user/userSlice";
+import { IChatResponse, IMessage } from "../types/chat";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL as string;
 
@@ -25,6 +25,37 @@ export const chatApi = createApi({
         try {
           const { data } = await queryFulfilled;
           dispatch(setListOfChats(data));
+        } catch (error) {
+          console.error("chatApi-getAllChats-onQueryStarted_error:", error);
+        }
+      },
+    }),
+    getChatById: builder.query<IMessage[], number | string>({
+      query(chatId) {
+        return {
+          url: `/${chatId}`,
+          method: Method.GET,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessKey") ?? ""}`,
+          },
+        };
+      },
+      async onQueryStarted(chatId, { dispatch, queryFulfilled }) {
+        try {
+          const { data: messages } = await queryFulfilled;
+          const { data, isSuccess } = await dispatch(
+            chatApi.endpoints.getAllChats.initiate()
+          );
+
+          if (data && isSuccess) {
+            const activeChat = data.find(
+              (chat) =>
+                chat.chat.id === messages?.[0].chatId ||
+                chat.chat.id === Number(chatId)
+            );
+
+            if (activeChat) dispatch(setActiveChat(activeChat));
+          }
         } catch (error) {
           console.error("chatApi-getAllChats-onQueryStarted_error:", error);
         }
@@ -60,4 +91,5 @@ export const {
   useGetAllChatsQuery,
   useLazyCreateChatQuery,
   useCreateChatQuery,
+  useLazyGetChatByIdQuery,
 } = chatApi;

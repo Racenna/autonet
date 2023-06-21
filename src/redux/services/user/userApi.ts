@@ -3,6 +3,7 @@ import {
   IGetNewTokenRequest,
   IGetNewTokenResponse,
   IGetUserResponse,
+  IUpdateProfile,
   IUserListItem,
 } from "../types/user";
 import { setListOfUsers, setUser } from "../../user/userSlice";
@@ -92,8 +93,35 @@ export const userApi = createApi({
         }
       },
     }),
+    updateProfileInfo: builder.mutation<void, IUpdateProfile>({
+      query(profileInfo) {
+        return {
+          url: "/",
+          method: Method.PUT,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessKey")}`,
+          },
+          body: profileInfo,
+        };
+      },
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          await dispatch(userApi.endpoints.getMe.initiate());
+        } catch (error) {
+          console.error(
+            "userApi-updateProfileInfo-onQueryStarted_error:",
+            error
+          );
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetMeMutation, useGetNewTokenMutation, useGetAllUsersQuery } =
-  userApi;
+export const {
+  useGetMeMutation,
+  useGetNewTokenMutation,
+  useGetAllUsersQuery,
+  useUpdateProfileInfoMutation,
+} = userApi;

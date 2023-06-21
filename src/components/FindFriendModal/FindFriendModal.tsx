@@ -49,7 +49,11 @@ export const FindFriendModal: FC<ModalProps> = ({ open, handleClose }) => {
 
   const usersList = useAppSelector((state) => state.user.listOfUsers);
   const sendedRequests = useAppSelector((state) => {
-    const { UserId } = decodeJWT(localStorage.getItem("accessKey") ?? "");
+    const decodedToken = decodeJWT(localStorage.getItem("accessKey") ?? "");
+
+    if (!decodedToken) return [];
+
+    const { UserId } = decodedToken;
     const senderRequests = state.user.listOfRequests.filter(
       (request) => request.senderId === Number(UserId)
     );
