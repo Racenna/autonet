@@ -9,8 +9,9 @@ import {
   ListItemAvatar,
   Avatar,
   ListItemText,
+  TextField,
 } from "@mui/material";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useGetAllUsersQuery } from "../../redux/services/user/userApi";
 import { Spacer } from "../../shared/components/Spacer";
 import { useAppSelector } from "../../redux/store";
@@ -29,7 +30,7 @@ const modalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 500,
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: 1,
@@ -41,6 +42,7 @@ const modalStyle = {
 export const FindFriendModal: FC<ModalProps> = ({ open, handleClose }) => {
   const { isLoading } = useGetAllUsersQuery();
   const { refetch: refetchSendedRequest } = useGetFriendRequestsQuery();
+  const [search, setSearch] = useState("");
 
   const [
     sendFriendRequest,
@@ -87,40 +89,54 @@ export const FindFriendModal: FC<ModalProps> = ({ open, handleClose }) => {
           {usersList.length === 0 ? (
             <Typography>Empty list</Typography>
           ) : (
-            <List>
-              {usersList.map((user) => {
-                const isSent = sendedRequests.some(
-                  (sended) => sended.receiverId === user.id
-                );
-                return (
-                  <ListItem
-                    key={user.id}
-                    secondaryAction={
-                      <Button
-                        variant="contained"
-                        color="success"
-                        onClick={() => {
-                          sendFriendRequest(user.id);
-                        }}
-                        disabled={isSent}
+            <>
+              <TextField
+                label="User search"
+                fullWidth
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <List>
+                {usersList
+                  .filter((user) =>
+                    `${user.profile.name} ${user.profile.surname}`.includes(
+                      search
+                    )
+                  )
+                  .map((user) => {
+                    const isSent = sendedRequests.some(
+                      (sended) => sended.receiverId === user.id
+                    );
+                    return (
+                      <ListItem
+                        key={user.id}
+                        secondaryAction={
+                          <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => {
+                              sendFriendRequest(user.id);
+                            }}
+                            disabled={isSent}
+                          >
+                            {isSent ? "Received" : "Send request"}
+                          </Button>
+                        }
                       >
-                        {isSent ? "Received" : "Send request"}
-                      </Button>
-                    }
-                  >
-                    <ListItemAvatar>
-                      <Avatar
-                        alt={user.profile.name}
-                        src={user.profile.avatarImage}
-                      />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={`${user.profile.name} ${user.profile.surname}`}
-                    />
-                  </ListItem>
-                );
-              })}
-            </List>
+                        <ListItemAvatar>
+                          <Avatar
+                            alt={user.profile.name}
+                            src={user.profile.avatarImage}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={`${user.profile.name} ${user.profile.surname}`}
+                        />
+                      </ListItem>
+                    );
+                  })}
+              </List>
+            </>
           )}
         </Box>
       )}
