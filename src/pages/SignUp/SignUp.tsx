@@ -217,7 +217,7 @@ export const SignUp = () => {
                           },
                         }}
                         value={new Date(field.value ?? "")}
-                        onChange={(date) => field.onChange(date)}
+                        onChange={(date: any) => field.onChange(date)}
                       />
                     );
                   }}

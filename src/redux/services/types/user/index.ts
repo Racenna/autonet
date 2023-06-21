@@ -45,3 +45,15 @@ export interface IProfileLowerCase {
   description: string;
   sex: Gender;
 }
+
+export interface IUpdateProfile {
+  password?: string | null;
+  profile: {
+    name?: string | null;
+    surname?: string | null;
+    birthday?: string | null;
+    avatarImage?: string | null;
+    description?: string | null;
+    sex?: string | null;
+  };
+}

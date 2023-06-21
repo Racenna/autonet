@@ -14,6 +14,7 @@ import { isAuthorized } from "./utils/isAuthorized";
 import MessagePage from "./pages/MessagePage/MessagePage";
 import { HomePage } from "./pages/HomePage";
 import { useGetNewTokenMutation } from "./redux/services/user/userApi";
+import { ProfilePage } from "./pages/ProfilePage";
 
 function App() {
   const [getMe, { isLoading, isError, error }] = useGetMeMutation();
@@ -35,7 +36,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
-  if (isLoading) return <FullScreenLoader />;
+  if (isLoading) return <FullScreenLoader fullScreen />;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -43,7 +44,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<HomePage />}>
-            <Route path="/messages/:friendId" element={<MessagePage />} />
+            <Route path="/messages/:chatId" element={<MessagePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
           <Route path={Path.SIGN_IN} element={<SignIn />} />
           <Route path={Path.SIGN_UP} element={<SignUp />} />

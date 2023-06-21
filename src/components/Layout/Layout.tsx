@@ -13,7 +13,7 @@ import {
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Header } from "../Header";
 import { Outlet } from "react-router";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import styles from "./Layout.module.css";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
@@ -27,6 +27,7 @@ import { decodeJWT } from "../../utils/decodeJWT";
 import { IFriendWithChat } from "../../redux/services/types/chat";
 import { toast } from "react-toastify";
 import { setActiveChat } from "../../redux/user/userSlice";
+import { Path } from "../../const/enums";
 
 export const Layout = () => {
   const [getFriendsList] = useLazyGetFriendsListQuery();
@@ -38,7 +39,11 @@ export const Layout = () => {
 
   const isAuth = useAppSelector((state) => state.user.isAuthorized);
   const friendsAndTheirChats = useAppSelector((state) => {
-    const { UserId } = decodeJWT(localStorage.getItem("accessKey") ?? "");
+    const decodedToken = decodeJWT(localStorage.getItem("accessKey") ?? "");
+
+    if (!decodedToken) return [];
+
+    const { UserId } = decodedToken;
     const chats = state.user.listOfChats;
     const friends = state.user.listOfFriends;
 
@@ -62,11 +67,20 @@ export const Layout = () => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [open, setOpen] = useState(false);
 
   const handleOpenModal = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);
+
+  useEffect(() => {
+    if (
+      location.pathname !== Path.SIGN_IN &&
+      location.pathname !== Path.SIGN_UP
+    )
+      localStorage.setItem("currentRoute", location.pathname);
+  }, []);
 
   useEffect(() => {
     if (isAuth) {

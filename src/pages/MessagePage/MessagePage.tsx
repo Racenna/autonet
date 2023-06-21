@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, TextField, Button, Box, Typography } from "@mui/material";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Path } from "../../const/enums";
 import { useAppSelector } from "../../redux/store";
 
@@ -9,10 +9,15 @@ import styles from "./MessagePage.module.css";
 import { Spacer } from "../../shared/components/Spacer";
 import { IMessage, ISendMessage } from "../../redux/services/types/chat";
 import { decodeJWT } from "../../utils/decodeJWT";
+import { useLazyGetChatByIdQuery } from "../../redux/services/chat/chatApi";
+import { FullScreenLoader } from "../../shared/components/FullscreenLoader";
 
 const MessagePage: React.FC = () => {
+  const [getChatById, { isSuccess, isError, isLoading }] =
+    useLazyGetChatByIdQuery();
   const navigate = useNavigate();
-  const { id: chatId } = useParams();
+  const location = useLocation();
+  const { chatId } = useParams();
   const isAuth = useAppSelector((state) => state.user.isAuthorized);
   const activeChat = useAppSelector((state) => state.user.activeChat);
 
@@ -37,10 +42,24 @@ const MessagePage: React.FC = () => {
   };
 
   useEffect(() => {
+    localStorage.setItem("currentRoute", location.pathname);
     if (!isAuth) {
       navigate(Path.SIGN_IN);
-    } else {
-      setMessages(() => activeChat?.chat.messages ?? []);
+    }
+    if (chatId) {
+      getChatById(chatId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeChat) {
+      setMessages(activeChat.chat.messages);
+    }
+  }, [activeChat]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setMessages(() => activeChat?.chat?.messages ?? []);
       // Create connection SignalR Hub
       const createHubConnection = async () => {
         const connection = new HubConnectionBuilder()
@@ -90,7 +109,7 @@ const MessagePage: React.FC = () => {
         }
       };
     }
-  }, []);
+  }, [isSuccess]);
 
   const handleInputMessage = async (chatId: number | string) => {
     if (!chatId) return;
@@ -103,7 +122,12 @@ const MessagePage: React.FC = () => {
 
   const handleSendMessage = async () => {
     if (!newMessage) return;
-    const { UserId } = decodeJWT(localStorage.getItem("accessKey") ?? "");
+
+    const decodedToken = decodeJWT(localStorage.getItem("accessKey") ?? "");
+
+    if (!decodedToken) return;
+
+    const { UserId } = decodedToken;
 
     const message: ISendMessage = {
       SenderId: UserId,
@@ -112,9 +136,11 @@ const MessagePage: React.FC = () => {
     };
 
     try {
+      console.log("message:", message);
+      console.log("hubConnection:", hubConnection);
       await hubConnection?.invoke(
         "SendMessage",
-        chatId ?? activeChat?.chat.id,
+        Number(chatId) ?? Number(activeChat?.chat?.id),
         message.Message
       );
       setNewMessage("");
@@ -123,6 +149,8 @@ const MessagePage: React.FC = () => {
       console.log("SignalR Send Error: ", error);
     }
   };
+
+  if (isLoading) return <FullScreenLoader />;
 
   return (
     <Box className={styles.container}>
@@ -155,7 +183,7 @@ const MessagePage: React.FC = () => {
             value={newMessage}
             onChange={(e) => {
               setNewMessage(e.target.value);
-              handleInputMessage(Number(chatId ?? activeChat?.chat.id));
+              handleInputMessage(Number(chatId ?? activeChat?.chat?.id));
             }}
             size="small"
           />

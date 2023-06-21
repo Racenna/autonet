@@ -54,7 +54,12 @@ export const Header = () => {
   const isAuth = useAppSelector((state) => state.user.isAuthorized);
   const currentUser = useAppSelector((state) => state.user.user);
   const receivedRequests = useAppSelector((state) => {
-    const { UserId } = decodeJWT(localStorage.getItem("accessKey") ?? "");
+    const decodedToken = decodeJWT(localStorage.getItem("accessKey") ?? "");
+
+    if (!decodedToken) return [];
+
+    const { UserId } = decodedToken;
+
     return state.user.listOfRequests.filter(
       (request) => request.receiverId === Number(UserId)
     );
@@ -197,6 +202,14 @@ export const Header = () => {
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
               >
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    navigate("/profile");
+                  }}
+                >
+                  Profile
+                </MenuItem>
                 <MenuItem
                   onClick={() => {
                     dispatch(logout());
