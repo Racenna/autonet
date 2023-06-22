@@ -23,9 +23,8 @@ export const Error404 = () => {
           <Grid item xs={6}>
             <Typography variant="h1">404</Typography>
             <Typography variant="h6">{t("error.pageNotExist")}</Typography>
-            {/*  TODO: change home page path */}
             <Spacer height={16} />
-            <LinkButton path={Path.SIGN_IN} variant="contained">
+            <LinkButton path={Path.HOME} variant="contained">
               {t("backHome")}
             </LinkButton>
           </Grid>

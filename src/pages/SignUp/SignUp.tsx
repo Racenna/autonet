@@ -56,7 +56,7 @@ export const SignUp = () => {
 
   useEffect(() => {
     if (isAuth && isAuthorized()) {
-      navigate("/");
+      navigate(Path.HOME);
     }
   }, [isAuth]);
 

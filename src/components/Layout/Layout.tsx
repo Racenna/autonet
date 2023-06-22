@@ -29,8 +29,10 @@ import { toast } from "react-toastify";
 import { setActiveChat } from "../../redux/user/userSlice";
 import { Path } from "../../const/enums";
 import LZString from "lz-string";
+import { useTranslation } from "react-i18next";
 
 export const Layout = () => {
+  const { t } = useTranslation();
   const [getFriendsList] = useLazyGetFriendsListQuery();
   const [getAllChats] = useLazyGetAllChatsQuery();
   const [
@@ -98,7 +100,7 @@ export const Layout = () => {
 
   useEffect(() => {
     if (createChatSuccess) {
-      toast.success("Chat created");
+      toast.success(t("chat.created"));
     }
   }, [createChatIsLoading]);
 
@@ -109,9 +111,9 @@ export const Layout = () => {
       );
 
       if (decompressedString !== null) {
-        return "Shared route";
+        return t("chat.sharedRoute");
       } else {
-        return "Failed to display the message";
+        return t("chat.failedToDisplayMessage");
       }
     } catch (error) {
       return message;
@@ -163,7 +165,9 @@ export const Layout = () => {
                           primary={`${friendWithChat.friendInfo.profile.name} ${friendWithChat.friendInfo.profile.surname}`}
                           secondary={
                             !friendWithChat.chat
-                              ? `Create chat with ${friendWithChat.friendInfo.profile.name}`
+                              ? t("chat.createChatWith", {
+                                  name: friendWithChat.friendInfo.profile.name,
+                                })
                               : getLastMessage(
                                   friendWithChat.chat?.lastMessage?.message ??
                                     ""
@@ -177,7 +181,7 @@ export const Layout = () => {
               </List>
             </Box>
             <Box display="flex" justifyContent="center" marginTop="auto">
-              <Tooltip title="Find friend">
+              <Tooltip title={t("chat.findDriver")}>
                 <IconButton
                   color="primary"
                   aria-label="delete"

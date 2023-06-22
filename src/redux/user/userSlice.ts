@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { IUser, IUserListItem } from "../services/types/user";
 import { IGetAllFriendResponse } from "../services/types/friendRequest";
 import { IGetFriendshipListResponse } from "../services/types/friendship";
-import { IChatResponse, IMessage } from "../services/types/chat";
+import { IChatResponse } from "../services/types/chat";
 
 export interface UserState {
   user: IUser | null;
@@ -13,7 +13,6 @@ export interface UserState {
   listOfFriends: IGetFriendshipListResponse[];
   listOfChats: IChatResponse[];
   activeChat: IChatResponse | null;
-  activeMessages: IMessage[];
   isEditProfile: boolean;
 }
 
@@ -25,7 +24,6 @@ const initialState: UserState = {
   listOfFriends: [],
   listOfChats: [],
   activeChat: null,
-  activeMessages: [],
   isEditProfile: false,
 };
 
@@ -65,9 +63,6 @@ export const userSlice = createSlice({
     setActiveChat: (state, action: PayloadAction<IChatResponse | null>) => {
       state.activeChat = action.payload;
     },
-    setActiveMessages: (state, action: PayloadAction<IMessage[]>) => {
-      state.activeMessages = action.payload;
-    },
     changeUpdateState: (state, action: PayloadAction<boolean>) => {
       state.isEditProfile = action.payload;
     },
@@ -82,7 +77,6 @@ export const {
   setListOfFriends,
   setListOfChats,
   setActiveChat,
-  setActiveMessages,
   changeUpdateState,
 } = userSlice.actions;
 

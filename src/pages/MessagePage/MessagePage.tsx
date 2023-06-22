@@ -24,14 +24,14 @@ import RouteIcon from "@mui/icons-material/Route";
 import {
   useJsApiLoader,
   GoogleMap,
-  Marker,
   Autocomplete,
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import LZString from "lz-string";
+import { toast } from "react-toastify";
 
 import "./MapStyles.css";
-import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const modalStyle = {
   position: "relative",
@@ -80,6 +80,7 @@ const MessagePage: React.FC = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY ?? "",
     libraries: ["places"],
   });
+  const { t } = useTranslation();
 
   const [getChatById, { isSuccess, isError, isLoading }] =
     useLazyGetChatByIdQuery();
@@ -127,12 +128,16 @@ const MessagePage: React.FC = () => {
     setMessages((prevMessages) => [...prevMessages, message]);
   };
   const handleTextTyping = (userName: string) => {
-    setTypingStatus(`${userName} is typing...`);
+    setTypingStatus(
+      t("chat.isTyping", {
+        name: userName,
+      })
+    );
     console.log(`User ${userName} is typing...`);
 
     setTimeout(() => {
       setTypingStatus(null);
-    }, 3000);
+    }, 5000);
   };
 
   useEffect(() => {
@@ -268,9 +273,7 @@ const MessagePage: React.FC = () => {
         (result.routes[0].legs[0]?.start_location as any) ?? DEFAULT_CENTER_INFO
       );
     } catch (_error) {
-      toast.error(
-        "An error occurred while trying to calculate the route. Try to fill in the data correctly"
-      );
+      toast.error(t("error.calculateRoute"));
     }
   };
 
@@ -322,7 +325,7 @@ const MessagePage: React.FC = () => {
       autocompleteDestination.current = null;
     } catch (error) {
       console.log("SignalR Send Error: ", error);
-      toast.error("An error occurred while trying to share the route");
+      toast.error(t("error.shareRoute"));
     }
   };
 
@@ -337,7 +340,7 @@ const MessagePage: React.FC = () => {
           <Box key={message.id}>
             <Typography fontWeight="bold">{message.senderName}</Typography>
             <Box display="flex" alignItems="center">
-              <Typography>Shared route</Typography>
+              <Typography>{t("chat.sharedRoute")}</Typography>
               <Spacer width={8} />
               <IconButton
                 onClick={() => {
@@ -374,13 +377,12 @@ const MessagePage: React.FC = () => {
             <Typography fontWeight="bold">
               {message.senderName ?? "NO_NAME:"}
             </Typography>
-            <Typography>Failed to display map route</Typography>
+            <Typography>{t("chat.failedToDisplayRoute")}</Typography>
           </Box>
         );
       }
     } catch (error) {
       // if cannot decode string
-      console.log("GOT AN ERROR:", error);
       return (
         <Box key={message.id}>
           <Typography fontWeight="bold">
@@ -426,7 +428,7 @@ const MessagePage: React.FC = () => {
           <TextField
             className={styles.inputField}
             fullWidth
-            placeholder="Write a message..."
+            placeholder={t("chat.writeMessagePlaceholder") ?? ""}
             value={newMessage}
             onChange={(e) => {
               setNewMessage(e.target.value);
@@ -436,7 +438,7 @@ const MessagePage: React.FC = () => {
             size="small"
           />
           <Button variant="contained" onClick={() => setShareIsOpen(true)}>
-            Share
+            {t("chat.share")}
           </Button>
           <Spacer width={8} />
           <Button
@@ -444,7 +446,7 @@ const MessagePage: React.FC = () => {
             color="primary"
             onClick={handleSendMessage}
           >
-            Send
+            {t("chat.send")}
           </Button>
         </Grid>
       </Grid>
@@ -478,7 +480,7 @@ const MessagePage: React.FC = () => {
                   }}
                 >
                   <TextField
-                    label="Origin"
+                    label={t("chat.origin")}
                     value={originValue}
                     size="small"
                     onChange={(e) => setOriginValue(e.target.value)}
@@ -498,7 +500,7 @@ const MessagePage: React.FC = () => {
                   }}
                 >
                   <TextField
-                    label="Destination"
+                    label={t("chat.destination")}
                     value={destinationValue}
                     size="small"
                     onChange={(e) => setDestinationValue(e.target.value)}
@@ -510,7 +512,7 @@ const MessagePage: React.FC = () => {
                   variant="outlined"
                   onClick={calculateRoute}
                 >
-                  Calculate
+                  {t("chat.calculate")}
                 </Button>
                 <Spacer width={8} />
                 <Button
@@ -524,9 +526,9 @@ const MessagePage: React.FC = () => {
               </Box>
               <Spacer height={8} />
               <Box display="flex">
-                <Typography>Distance: {distance}</Typography>
+                <Typography>{t("chat.distance", { distance })}</Typography>
                 <Spacer width={64} />
-                <Typography>Duration: {duration}</Typography>
+                <Typography>{t("chat.duration", { duration })}</Typography>
                 <Spacer width={64} />
                 <Box display="flex" marginLeft="auto">
                   <Button
@@ -535,7 +537,7 @@ const MessagePage: React.FC = () => {
                     style={{ justifySelf: "flex-end" }}
                     onClick={() => map?.panTo(centerInfo)}
                   >
-                    center
+                    {t("chat.center")}
                   </Button>
                   <Spacer width={8} />
                   <Button
@@ -546,7 +548,7 @@ const MessagePage: React.FC = () => {
                       !directions || (directions as any).status !== "OK"
                     }
                   >
-                    Send direction
+                    {t("chat.sendDirection")}
                   </Button>
                 </Box>
               </Box>

@@ -42,10 +42,13 @@ function App() {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<HomePage />}>
-            <Route path="/messages/:chatId" element={<MessagePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+        <Route path={Path.HOME} element={<Layout />}>
+          <Route path={Path.HOME} element={<HomePage />}>
+            <Route
+              path={`${Path.MESSAGES}/:chatId`}
+              element={<MessagePage />}
+            />
+            <Route path={Path.PROFILE} element={<ProfilePage />} />
           </Route>
           <Route path={Path.SIGN_IN} element={<SignIn />} />
           <Route path={Path.SIGN_UP} element={<SignUp />} />
