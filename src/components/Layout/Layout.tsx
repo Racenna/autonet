@@ -28,6 +28,7 @@ import { IFriendWithChat } from "../../redux/services/types/chat";
 import { toast } from "react-toastify";
 import { setActiveChat } from "../../redux/user/userSlice";
 import { Path } from "../../const/enums";
+import LZString from "lz-string";
 
 export const Layout = () => {
   const [getFriendsList] = useLazyGetFriendsListQuery();
@@ -101,6 +102,22 @@ export const Layout = () => {
     }
   }, [createChatIsLoading]);
 
+  const getLastMessage = (message: string) => {
+    try {
+      const decompressedString = JSON.parse(
+        LZString.decompressFromBase64(message)
+      );
+
+      if (decompressedString !== null) {
+        return "Shared route";
+      } else {
+        return "Failed to display the message";
+      }
+    } catch (error) {
+      return message;
+    }
+  };
+
   return (
     <Box height="100%">
       <Header />
@@ -147,7 +164,10 @@ export const Layout = () => {
                           secondary={
                             !friendWithChat.chat
                               ? `Create chat with ${friendWithChat.friendInfo.profile.name}`
-                              : friendWithChat.chat?.lastMessage?.message ?? ""
+                              : getLastMessage(
+                                  friendWithChat.chat?.lastMessage?.message ??
+                                    ""
+                                )
                           }
                         />
                       </ListItemButton>

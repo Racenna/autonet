@@ -36,6 +36,7 @@ export const userSlice = createSlice({
     logout: () => {
       localStorage.removeItem("accessKey");
       localStorage.removeItem("refresh_token");
+      localStorage.removeItem("currentRoute");
 
       return initialState;
     },
