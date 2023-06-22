@@ -28,8 +28,10 @@ import {
 } from "../../redux/services/friendRequest";
 import { decodeJWT } from "../../utils/decodeJWT";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export const Header = () => {
+  const { t } = useTranslation();
   const { refetch: refetchFriendRequests } = useGetFriendRequestsQuery();
   const [
     acceptRequest,
@@ -110,7 +112,7 @@ export const Header = () => {
     >
       <Toolbar sx={{ flexWrap: "wrap" }}>
         <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-          Social Network
+          {t("driversNetwork")}
         </Typography>
         {isAuth && currentUser && (
           <>
@@ -140,7 +142,7 @@ export const Header = () => {
               >
                 <Box margin="16px 12px">
                   {receivedRequests.length === 0 && (
-                    <Typography>You do not have any requests</Typography>
+                    <Typography>{t("notification.noRequest")}</Typography>
                   )}
                   {receivedRequests.map((request) => {
                     return (
@@ -151,7 +153,9 @@ export const Header = () => {
                               {request.sender.profile.name}{" "}
                               {request.sender.profile.surname}
                             </Typography>
-                            <Typography>Sent you a friend request</Typography>
+                            <Typography>
+                              {t("notification.sendRequest")}
+                            </Typography>
                           </CardContent>
                           <CardActions>
                             <Box
@@ -165,7 +169,7 @@ export const Header = () => {
                                 color="success"
                                 onClick={() => acceptRequest(request.id)}
                               >
-                                Accept
+                                {t("accept")}
                               </Button>
                               <Button
                                 fullWidth
@@ -173,7 +177,7 @@ export const Header = () => {
                                 color="error"
                                 onClick={() => declineRequest(request.id)}
                               >
-                                Decline
+                                {t("decline")}
                               </Button>
                             </Box>
                           </CardActions>
@@ -216,7 +220,7 @@ export const Header = () => {
                     navigate("/profile");
                   }}
                 >
-                  Profile
+                  {t("profile")}
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
@@ -225,7 +229,7 @@ export const Header = () => {
                     navigate(Path.SIGN_IN);
                   }}
                 >
-                  <Typography textAlign="center">Logout</Typography>
+                  <Typography textAlign="center">{t("logout")}</Typography>
                 </MenuItem>
               </Menu>
             </Box>

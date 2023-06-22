@@ -5,8 +5,10 @@ import styles from "./ProfileInfo.module.css";
 import { Spacer } from "../../shared/components/Spacer";
 import { useAppDispatch } from "../../redux/store";
 import { changeUpdateState } from "../../redux/user/userSlice";
+import { useTranslation } from "react-i18next";
 
 export const ProfileInfo = ({ user }: { user: IUser }) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   return (
@@ -24,19 +26,19 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
         </Grid>
         <Grid item className={styles.contentBlock}>
           <Typography>
-            <b>Email: </b>
+            <b>{t("auth.email")}: </b>
             {user.Profile.Email}
           </Typography>
           <Typography>
-            <b>Birthday: </b>
+            <b>{t("auth.birthday")}: </b>
             {user.Profile.Birthday}
           </Typography>
           <Typography>
-            <b>Description: </b>
+            <b>{t("auth.description")}: </b>
             {user.Profile.Description}
           </Typography>
           <Typography>
-            <b>Gender: </b>
+            <b>{t("gender")}: </b>
             {user.Profile.sex}
           </Typography>
         </Grid>
@@ -45,7 +47,7 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
             variant="contained"
             onClick={() => dispatch(changeUpdateState(true))}
           >
-            Update profile info
+            {t("profile.updateInfo")}
           </Button>
         </Grid>
       </Grid>

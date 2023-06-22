@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import { useSendFriendRequestMutation } from "../../redux/services/friendRequest";
 import { decodeJWT } from "../../utils/decodeJWT";
 import { useGetFriendRequestsQuery } from "../../redux/services/friendRequest/friendRequestApi";
+import { useTranslation } from "react-i18next";
 
 interface ModalProps {
   open: boolean;
@@ -43,6 +44,7 @@ export const FindFriendModal: FC<ModalProps> = ({ open, handleClose }) => {
   const { isLoading } = useGetAllUsersQuery();
   const { refetch: refetchSendedRequest } = useGetFriendRequestsQuery();
   const [search, setSearch] = useState("");
+  const { t } = useTranslation();
 
   const [
     sendFriendRequest,
@@ -72,11 +74,11 @@ export const FindFriendModal: FC<ModalProps> = ({ open, handleClose }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Request successfully sent");
+      toast.success(t("toast.successSent"));
       refetchSendedRequest();
     }
     if (isError) {
-      toast.error("Request did not send");
+      toast.error(t("toast.failedSent"));
     }
   }, [isFriendRequestLoading]);
 
@@ -86,16 +88,16 @@ export const FindFriendModal: FC<ModalProps> = ({ open, handleClose }) => {
         <Box display="flex" justifyContent="center" alignItems="center">
           <CircularProgress />
           <Spacer height={8} />
-          <Typography fontWeight="bold">Loading...</Typography>
+          <Typography fontWeight="bold">{t("loading")}</Typography>
         </Box>
       ) : (
         <Box sx={modalStyle}>
           {usersList.length === 0 ? (
-            <Typography>Empty list</Typography>
+            <Typography>{t("emptyList")}</Typography>
           ) : (
             <>
               <TextField
-                label="User search"
+                label={t("userSearch")}
                 fullWidth
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -123,7 +125,7 @@ export const FindFriendModal: FC<ModalProps> = ({ open, handleClose }) => {
                             }}
                             disabled={isSent}
                           >
-                            {isSent ? "Received" : "Send request"}
+                            {isSent ? t("received") : t("sendRequest")}
                           </Button>
                         }
                       >

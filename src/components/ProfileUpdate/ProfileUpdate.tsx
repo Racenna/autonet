@@ -108,8 +108,8 @@ export const ProfileUpdate = ({ user }: { user: IUser }) => {
             .then((avatarUrl) => {
               data.profile.avatarImage = avatarUrl;
               updateProfile(data)
-                .then(() => toast.success("Profile data updated"))
-                .catch(() => toast.error("Profile data did not update"));
+                .then(() => toast.success(t("profile.dataUpdated")))
+                .catch(() => toast.error(t("profile.dataDidNotUpdate")));
             })
             .catch((error) =>
               console.error("error when try to get url:", error)
@@ -120,27 +120,27 @@ export const ProfileUpdate = ({ user }: { user: IUser }) => {
         });
     } else {
       updateProfile(data)
-        .then(() => toast.success("Profile data updated"))
-        .catch(() => toast.error("Profile data did not update"));
+        .then(() => toast.success(t("profile.dataUpdated")))
+        .catch(() => toast.error(t("profile.dataDidNotUpdate")));
     }
   };
 
   useEffect(() => {
     if (isSuccess) handleCancelUpdate();
-    if (isError) toast.error("Error while updating");
+    if (isError) toast.error(t("error.errorWhileUpdating"));
   }, [isSuccess]);
 
   return (
     <Box className={styles.container}>
       <Box className={styles.headerBlock}>
         <Typography component="h1" variant="h5">
-          Update profile
+          {t("profile.update")}
         </Typography>
       </Box>
       <Box className={styles.contentBlock}>
         <Container maxWidth="xs">
           <Typography variant="caption" display="block" gutterBottom>
-            * All fields are optional
+            {t("profile.optionalFields")}
           </Typography>
           <FormProvider {...methods}>
             <Box
@@ -280,7 +280,7 @@ export const ProfileUpdate = ({ user }: { user: IUser }) => {
                     disabled={isLoading}
                     onClick={handleCancelUpdate}
                   >
-                    Cancel
+                    {t("cancel")}
                   </Button>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -291,7 +291,7 @@ export const ProfileUpdate = ({ user }: { user: IUser }) => {
                     sx={{ mt: 3, mb: 2 }}
                     disabled={isLoading}
                   >
-                    Save
+                    {t("save")}
                   </Button>
                 </Grid>
               </Grid>

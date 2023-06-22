@@ -28,8 +28,11 @@ import { IFriendWithChat } from "../../redux/services/types/chat";
 import { toast } from "react-toastify";
 import { setActiveChat } from "../../redux/user/userSlice";
 import { Path } from "../../const/enums";
+import LZString from "lz-string";
+import { useTranslation } from "react-i18next";
 
 export const Layout = () => {
+  const { t } = useTranslation();
   const [getFriendsList] = useLazyGetFriendsListQuery();
   const [getAllChats] = useLazyGetAllChatsQuery();
   const [
@@ -97,9 +100,25 @@ export const Layout = () => {
 
   useEffect(() => {
     if (createChatSuccess) {
-      toast.success("Chat created");
+      toast.success(t("chat.created"));
     }
   }, [createChatIsLoading]);
+
+  const getLastMessage = (message: string) => {
+    try {
+      const decompressedString = JSON.parse(
+        LZString.decompressFromBase64(message)
+      );
+
+      if (decompressedString !== null) {
+        return t("chat.sharedRoute");
+      } else {
+        return t("chat.failedToDisplayMessage");
+      }
+    } catch (error) {
+      return message;
+    }
+  };
 
   return (
     <Box height="100%">
@@ -146,8 +165,13 @@ export const Layout = () => {
                           primary={`${friendWithChat.friendInfo.profile.name} ${friendWithChat.friendInfo.profile.surname}`}
                           secondary={
                             !friendWithChat.chat
-                              ? `Create chat with ${friendWithChat.friendInfo.profile.name}`
-                              : friendWithChat.chat?.lastMessage?.message ?? ""
+                              ? t("chat.createChatWith", {
+                                  name: friendWithChat.friendInfo.profile.name,
+                                })
+                              : getLastMessage(
+                                  friendWithChat.chat?.lastMessage?.message ??
+                                    ""
+                                )
                           }
                         />
                       </ListItemButton>
@@ -157,7 +181,7 @@ export const Layout = () => {
               </List>
             </Box>
             <Box display="flex" justifyContent="center" marginTop="auto">
-              <Tooltip title="Find friend">
+              <Tooltip title={t("chat.findDriver")}>
                 <IconButton
                   color="primary"
                   aria-label="delete"

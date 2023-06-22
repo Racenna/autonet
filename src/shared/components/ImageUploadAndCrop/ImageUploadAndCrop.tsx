@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Button, Box, Slider } from "@mui/material";
 import AvatarEditor from "react-avatar-editor";
+import { useTranslation } from "react-i18next";
 
 const CropImage = ({
   onSaveCropImage,
@@ -12,6 +13,8 @@ const CropImage = ({
   const [image, setImage] = useState("");
   const [imageZoom, setImageZoom] = useState<number>(1);
   const editorRef = useRef<AvatarEditor | null>(null);
+
+  const { t } = useTranslation();
 
   const reset = () => {
     setImage("");
@@ -48,7 +51,7 @@ const CropImage = ({
     <div>
       <label htmlFor="upload-avatar">
         <Button variant="contained" component="span">
-          Upload Avatar
+          {t("uploadAvatar")}
         </Button>
         <input
           id="upload-avatar"
@@ -86,7 +89,7 @@ const CropImage = ({
       {image && (
         <Box mt={2}>
           <Button variant="contained" onClick={handleSave}>
-            Save uploaded image
+            {t("saveUploadedImage")}
           </Button>
         </Box>
       )}

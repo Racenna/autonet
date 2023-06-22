@@ -1,7 +1,9 @@
 import { CircularProgress, Box, Typography } from "@mui/material";
 import { Spacer } from "./Spacer";
+import { useTranslation } from "react-i18next";
 
 export const FullScreenLoader = ({ fullScreen }: { fullScreen?: boolean }) => {
+  const { t } = useTranslation();
   return (
     <Box
       display="flex"
@@ -12,7 +14,7 @@ export const FullScreenLoader = ({ fullScreen }: { fullScreen?: boolean }) => {
     >
       <CircularProgress />
       <Spacer height={8} />
-      <Typography fontWeight="bold">Loading...</Typography>
+      <Typography fontWeight="bold">{t("loading")}</Typography>
     </Box>
   );
 };
